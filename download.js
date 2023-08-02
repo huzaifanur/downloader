@@ -34,7 +34,7 @@ async function run() {
   try {
   } catch (error) {}
   console.log("Starting");
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 800 });
   await page.goto("https://www.winmarkremote.com/");
