@@ -13,7 +13,7 @@ async function run() {
   const csvAnchorId = "a#mp1_1_1_Anchor";
 
   //Puppeteer
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto("https://www.winmarkremote.com/");
   await page.waitForNetworkIdle();
