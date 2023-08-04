@@ -9,8 +9,10 @@ const { run } = require("./download.js");
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
-app.get("/downloadFile", async (req, res) => {
-  const cook = await run();
+app.get("/downloadFile/:storeNumber", async (req, res) => {
+  const storeNumber = req.params.storeNumber;
+  console.log(storeNumber);
+  const cook = await run(storeNumber);
   res.json(cook);
 });
 
