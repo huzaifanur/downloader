@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const { getData } = require("./utils");
 async function run() {
   //Constants
   const usernameId = "#ctl00_PlaceHolderMain_signInControl_UserName";
@@ -14,8 +15,6 @@ async function run() {
   //Puppeteer
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 800 });
-
   await page.goto("https://www.winmarkremote.com/");
   await page.waitForNetworkIdle();
   await page.type(usernameId, "SeanMcLaren");
@@ -27,22 +26,44 @@ async function run() {
   );
   console.log("Page Open");
   await page.waitForNetworkIdle();
-  await page.select(dropDownaId, "2");
+
+  await page.select(dropDownaId, "1");
   console.log("Selected");
   await page.waitForNetworkIdle();
+
   await page.click(AppylButtonId);
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   console.log("Applied");
   await page.waitForNetworkIdle();
   await page.click(actionId);
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   console.log("Action Clicked");
   await page.waitForNetworkIdle();
+
   await page.click(exportId);
   console.log("Export Clicked");
+  const html = await page.evaluate(() => document.querySelector("*").outerHTML);
+  const data = await getData(html);
   await page.waitForNetworkIdle();
-  await page.click(csvAnchorId);
-  await page.waitForNetworkIdle();
+
   const cookies = await page.cookies();
-  console.log(cookies);
+  await browser.close();
+  const FedAuth = getFedAuthValue(cookies);
+  console.log({ data });
+  console.log({ FedAuth });
+  return {
+    ...data,
+    FedAuth,
+  };
 }
 
 module.exports = { run };
+
+function getFedAuthValue(cookies) {
+  for (let i = 0; i < cookies.length; i++) {
+    if (cookies[i].name === "FedAuth") {
+      return `FedAuth=${cookies[i].value}`;
+    }
+  }
+  return null;
+}
