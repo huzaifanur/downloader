@@ -1,6 +1,6 @@
+const puppeteer = require("puppeteer");
 async function run() {
   //Constants
-  const puppeteer = require("puppeteer-extra");
   const usernameId = "#ctl00_PlaceHolderMain_signInControl_UserName";
   const passwordId = "#ctl00_PlaceHolderMain_signInControl_password";
   const inputButtonId = "#ctl00_PlaceHolderMain_signInControl_login";
@@ -11,32 +11,11 @@ async function run() {
   const exportId = "a#mp1_0_0_Anchor";
   const csvAnchorId = "a#mp1_1_1_Anchor";
 
-  const UserPreferencesPlugin = require("puppeteer-extra-plugin-user-preferences");
-
-  const downloadImageDirectoryPath = process.cwd();
-
-  console.log(downloadImageDirectoryPath);
-  puppeteer.use(
-    UserPreferencesPlugin({
-      userPrefs: {
-        download: {
-          prompt_for_download: false,
-          open_pdf_in_system_reader: true,
-          default_directory: downloadImageDirectoryPath,
-        },
-        plugins: {
-          always_open_pdf_externally: true,
-        },
-      },
-    })
-  );
   //Puppeteer
-  try {
-  } catch (error) {}
-  console.log("Starting");
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 800 });
+
   await page.goto("https://www.winmarkremote.com/");
   await page.waitForNetworkIdle();
   await page.type(usernameId, "SeanMcLaren");
@@ -48,7 +27,7 @@ async function run() {
   );
   console.log("Page Open");
   await page.waitForNetworkIdle();
-  await page.select(dropDownaId, "1");
+  await page.select(dropDownaId, "2");
   console.log("Selected");
   await page.waitForNetworkIdle();
   await page.click(AppylButtonId);
@@ -61,10 +40,9 @@ async function run() {
   console.log("Export Clicked");
   await page.waitForNetworkIdle();
   await page.click(csvAnchorId);
-  console.log("CSV Clicked");
   await page.waitForNetworkIdle();
-  console.log("Downloaded");
-  console.log("Browser Closed");
+  const cookies = await page.cookies();
+  console.log(cookies);
 }
 
 module.exports = { run };
