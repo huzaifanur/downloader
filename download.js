@@ -1,5 +1,7 @@
 const puppeteer = require("puppeteer");
 const { getData } = require("./utils");
+require("dotenv").config();
+
 async function run(storeNumber) {
   try {
     const usernameId = "#ctl00_PlaceHolderMain_signInControl_UserName";
@@ -10,14 +12,13 @@ async function run(storeNumber) {
     const actionId =
       "a#m_sqlRsWebPart_RSWebPartToolbar_ctl00_RptControls_RSActionMenu_ctl01";
     const exportId = "a#mp1_0_0_Anchor";
-
     //Puppeteer
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.goto("https://www.winmarkremote.com/");
     await page.waitForNetworkIdle();
-    await page.type(usernameId, "SeanMcLaren");
-    await page.type(passwordId, "4O{$CJ(&yp$)B7");
+    await page.type(usernameId, process.env.WINMARK_USERNAME);
+    await page.type(passwordId, process.env.WINMARK_PASSWORD);
     await page.click(inputButtonId);
     await page.waitForNetworkIdle();
     await page.goto(
